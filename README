@@ -1,4 +1,4 @@
-Lingua::EN::Fathom - provide readability and general text measurements 
+Lingua::EN::Fathom -  readability and general measurements of English text
 
 =head1 SYNOPSIS
 
@@ -6,42 +6,43 @@ Lingua::EN::Fathom - provide readability and general text measurements
 
    my $text = new Lingua::EN::Fathom; 
 
-	$text->analyse_file("sample.txt");
+   $text->analyse_file("sample.txt");
    
-	$text->analyse_block($text_string);
+   $text->analyse_block($text_string);
    
    $num_chars       = $text->num_chars;
    $num_words       = $text->num_words;
    $num_sentences   = $text->num_sentences;
    $num_text_lines  = $text->num_text_lines;
    $num_blank_lines = $text->num_blank_lines;
+   $num_paragraphs  = $text->num_paragraphs;
    
    %words = $text->unique_words;
-	foreach $word ( sort keys %words )
-	{
-		print("$words{$word} :$word\n");
-	}
+   foreach $word ( sort keys %words )
+   {
+      print("$words{$word} :$word\n");
+   }
    
    $fog     = $text->fog;
    $flesch  = $text->flesch;
    $kincaid = $text->kincaid;
    
-	print($text->report);
+   print($text->report);
    
 
 =head1 DESCRIPTION
 
 This module analyses English text in either a string or file. Totals are 
-then calculated for the number of characeters, words, sentences, blank
-and onon blank (text) lines.
+then calculated for the number of characters, words, sentences, blank
+and non blank (text) lines and paragraphs.
 
-Three common readablity statistics are also derived, the Fog, Flesch and
+Three common readability statistics are also derived, the Fog, Flesch and
 Kincaid indices. 
 
-All of these properties can ve accessed through individual methods, or by
-generatring a text report.
+All of these properties can be accessed through individual methods, or by
+generating a text report.
 
-	
+    
 =head1 REQUIRES
 
 Perl, version 5.001 or higher, Lingua::EN::Syllable 
@@ -58,10 +59,6 @@ Perl, version 5.001 or higher, Lingua::EN::Syllable
 =head1 BUGS
 
 
-=head1 CHANGES
-
-0.01 23 Jan 2000: First Release
-
                   
 =head1 COPYRIGHT
 
@@ -73,5 +70,5 @@ and/or modify it under the terms of the Perl Artistic License
 
 =head1 AUTHOR
 
-Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
+Lingua::EN::Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
 

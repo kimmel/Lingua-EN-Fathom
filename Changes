@@ -2,9 +2,15 @@
 Revision history for Perl CPAN module Lingua::En::Fathom
 
 
+1.02 15 Mar 2000: 
+
+   - Added paragraph couunt
+   - Fixed error in test 2 of test script (word count was 38, not 39)
+
+
 1.01 12 Mar 2000: 
 
-   - Added stricter test of hyphenated words
+   - Added stricter test for hyphenated words
    - Added more statistics to report
    - Accounted for name prefixes (Mr., Dr. etc ) in sentences
    - Improved documentation

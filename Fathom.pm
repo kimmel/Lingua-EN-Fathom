@@ -17,6 +17,8 @@ Lingua::EN::Fathom -  readability and general measurements of English text
    $num_sentences   = $text->num_sentences;
    $num_text_lines  = $text->num_text_lines;
    $num_blank_lines = $text->num_blank_lines;
+   $num_paragraphs  = $text->num_paragraphs;
+   
    
    %words = $text->unique_words;
    foreach $word ( sort keys %words )
@@ -40,7 +42,7 @@ Perl, version 5.001 or higher, Lingua::EN::Syllable
 
 This module analyses English text in either a string or file. Totals are 
 then calculated for the number of characters, words, sentences, blank
-and non blank (text) lines.
+and non blank (text) lines and paragraphs.
 
 Three common readability statistics are also derived, the Fog, Flesch and
 Kincaid indices. 
@@ -102,6 +104,11 @@ or block.
 
 Returns the number of lines NOT containing any text in the analysed text file 
 or block.
+
+=head2 num_blank_lines
+
+Returns the number of paragraphs in the analysed text file or block.
+
 
 
 =head2 READABILITY
@@ -166,7 +173,6 @@ the hash keys while the number of occurrences are held in the hash values.
 
    Analyse many files at once
    Analyse HTML and other formats
-   Count paragraphs
    Allow user control over what strictly defines a word
    Provide a density measure of white space to characters 
 
@@ -176,6 +182,10 @@ Common abbreviations such as St. or Pty. Ltd. will trick the module into
 inflating the number of sentences it finds.
 
 The syllable count provided in Lingua::EN;;syllable is about 90% accurate
+
+Acronyms that contain vowels, like GPO, will be counted as word.
+
+The fog index should exclude proper names
 
 
 =head1 BUGS
@@ -207,7 +217,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA @EXPORT_OK $VERSION);
 
-$VERSION   = '1.01';
+$VERSION   = '1.02';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -236,6 +246,7 @@ sub analyse_file
    
    open(IN_FH,"<$file_name");
    
+   my $in_paragraph = 0;
    while ( <IN_FH> )
    {
       my $one_line = $_;
@@ -244,10 +255,17 @@ sub analyse_file
          chomp($one_line);
          $text = &_analyse_line($text,$one_line);
          $text->{num_text_lines}++;
+         
+         unless ( $in_paragraph )
+         {
+	         $text->{num_paragraphs}++;
+            $in_paragraph = 1;
+         }
       }
       else # empty or blank line
       {
          $text->{num_blank_lines}++;
+         $in_paragraph = 0;
       }
    }
    close(IN_FH);
@@ -271,6 +289,8 @@ sub analyse_block
       return($text);
    }
    
+   my $in_paragraph = 0;
+   
    # by setting split limit to -1, we prevent split from stripping 
    # trailing line terminators
    my @all_lines = split(/\n/,$block,-1);
@@ -281,10 +301,18 @@ sub analyse_block
       {
          $text = &_analyse_line($text,$one_line);
          $text->{num_text_lines}++;
+         
+         unless ( $in_paragraph )
+         {
+	         $text->{num_paragraphs}++;
+            $in_paragraph = 1;
+         }
+         
       }
       else # empty or blank line
       {
          $text->{num_blank_lines}++;
+         $in_paragraph = 0;
       }
    }
    
@@ -320,6 +348,12 @@ sub num_blank_lines
 {
    my $text = shift;
    return($text->{num_blank_lines});
+}
+#------------------------------------------------------------------------------
+sub num_paragraphs
+{
+   my $text = shift;
+   return($text->{num_paragraphs});
 }
 #------------------------------------------------------------------------------
 sub fog
@@ -377,6 +411,7 @@ sub report
    $report .= sprintf("Average words per sentence : %.2f\n",$text->{words_per_sentence});
    $report .= sprintf("Number of text lines       : %d\n",  $text->num_text_lines);
    $report .= sprintf("Number of blank lines      : %d\n",  $text->num_blank_lines);
+   $report .= sprintf("Number of paragraphs       : %d\n",  $text->num_paragraphs);
    
    $report .= "\n\nREADABILITY INDICES\n\n";
    $report .= sprintf("Fog                        : %.2f\n",$text->fog);
