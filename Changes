@@ -1,0 +1,19 @@
+
+Revision history for Perl CPAN module Lingua::En::Fathom
+
+
+1.01 12 Mar 2000: 
+
+   - Added stricter test of hyphenated words
+   - Added more statistics to report
+   - Accounted for name prefixes (Mr., Dr. etc ) in sentences
+   - Improved documentation
+
+   - Changed Fog index calculation to use percentage of complex words
+     instead of total number of complex words. Thanks to Steve Grantz
+  
+   - Allowed for sentences  ending in '?' and '!' as well
+     as '.' Thanks to Steve Grantz for spotting this limitation.
+                  
+
+1.00 23 Jan 2000: First Release

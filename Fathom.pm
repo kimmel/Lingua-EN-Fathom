@@ -1,6 +1,6 @@
 =head1 NAME
 
-Lingua::EN::Fathom - provide readability and general text measurements 
+Lingua::EN::Fathom -  readability and general measurements of English text
 
 =head1 SYNOPSIS
 
@@ -8,9 +8,9 @@ Lingua::EN::Fathom - provide readability and general text measurements
 
    my $text = new Lingua::EN::Fathom; 
 
-	$text->analyse_file("sample.txt");
+   $text->analyse_file("sample.txt");
    
-	$text->analyse_block($text_string);
+   $text->analyse_block($text_string);
    
    $num_chars       = $text->num_chars;
    $num_words       = $text->num_words;
@@ -19,16 +19,16 @@ Lingua::EN::Fathom - provide readability and general text measurements
    $num_blank_lines = $text->num_blank_lines;
    
    %words = $text->unique_words;
-	foreach $word ( sort keys %words )
-	{
-		print("$words{$word} :$word\n");
-	}
+   foreach $word ( sort keys %words )
+   {
+      print("$words{$word} :$word\n");
+   }
    
    $fog     = $text->fog;
    $flesch  = $text->flesch;
    $kincaid = $text->kincaid;
    
-	print($text->report);
+   print($text->report);
    
 
 =head1 REQUIRES
@@ -39,16 +39,16 @@ Perl, version 5.001 or higher, Lingua::EN::Syllable
 =head1 DESCRIPTION
 
 This module analyses English text in either a string or file. Totals are 
-then calculated for the number of characeters, words, sentences, blank
-and onon blank (text) lines.
+then calculated for the number of characters, words, sentences, blank
+and non blank (text) lines.
 
-Three common readablity statistics are also derived, the Fog, Flesch and
+Three common readability statistics are also derived, the Fog, Flesch and
 Kincaid indices. 
 
-All of these properties can ve accessed through individual methods, or by
-generatring a text report.
+All of these properties can be accessed through individual methods, or by
+generating a text report.
 
-	
+   
 
 =head1 METHODS
 
@@ -83,7 +83,7 @@ includes characters such as spaces, and punctuation marks.
 
 Returns the number of words in the analysed text file or block. A word must
 consist of letters a-z with at least one vowel sound, and optionally an
-apostrophe or hyphen. Items such as "&, K108, NSW"	are not counted as words.
+apostrophe or hyphen. Items such as "&, K108, NSW" are not counted as words.
 
 
 =head2 num_sentences
@@ -102,17 +102,29 @@ or block.
 
 Returns the number of lines NOT containing any text in the analysed text file 
 or block.
-   
+
+
+=head2 READABILITY
+
+Three indices of text readability are calcuated. They all meausure complexity as
+a function of syllables per word and words per sentence. They assume the text	is
+well formed and logical. You could analyse a passage of non-sensical English and
+find the readability is quite good, provided the words are not too complex and 
+the sentences not too long.
+
+For more information see: http://www.plainlanguage.com/Resources/readability.html
+
+
 =head2 fog
 
 Returns the Fog index for the analysed text file or block.
 
 The Fog index, developed by Robert Gunning, is a well known and simple
 formula for measuring readability. The index indicates the number of years
-of formal education a reader of average intellegence would need to read the
+of formal education a reader of average intelligence would need to read the
 text once and understand that piece of writing with its word sentence workload.
 
-	18 unreadable
+   18 unreadable
    14 difficult
    12 ideal
    10 acceptable
@@ -140,37 +152,38 @@ that the document can be understood by an eighth grader. A score of 7.0 to
 
 =head2 unique_words
 
-Returns a hash of unique words. The word itself (in lower case)is held in 
-the hash key while the number of occurrences is held in the hash value.
-
-
-
-=head1 LIMITATIONS
+Returns a hash of unique words. The words (in lower case) are held in 
+the hash keys while the number of occurrences are held in the hash values.
 
 
 =head1 SEE ALSO
 
-B::Fathom
+   Lingua::EN::Syllable
+   B::Fathom
 
 
 =head1 POSSIBLE EXTENSIONS
 
-	Analyse many files at once
-	Analyse HTML and other formats
+   Analyse many files at once
+   Analyse HTML and other formats
    Count paragraphs
    Allow user control over what strictly defines a word
    Provide a density measure of white space to characters 
 
+=head1 LIMITATIONS
+
+Common abbreviations such as St. or Pty. Ltd. will trick the module into
+inflating the number of sentences it finds.
+
+The syllable count provided in Lingua::EN;;syllable is about 90% accurate
+
 
 =head1 BUGS
 
+  
 
-=head1 CHANGES
-
-0.01 23 Jan 2000: First Release
-
-                  
 =head1 COPYRIGHT
+
 
 Copyright (c) 2000 Kim Ryan. All rights reserved.
 This program is free software; you can redistribute it 
@@ -180,8 +193,7 @@ and/or modify it under the terms of the Perl Artistic License
 
 =head1 AUTHOR
 
-Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
-
+Lingua::EN::Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
 
 =cut
 
@@ -195,7 +207,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA @EXPORT_OK $VERSION);
 
-$VERSION   = '1.00';
+$VERSION   = '1.01';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -219,31 +231,34 @@ sub analyse_file
    # Only analyse non-empty text files
    unless ( -T $file_name and -s $file_name )
    {
-	   return($text);
+      return($text);
    }
    
-	open(IN_FH,"<$file_name");
+   open(IN_FH,"<$file_name");
    
-	while ( <IN_FH> )
+   while ( <IN_FH> )
    {
-   	my $one_line = $_;
+      my $one_line = $_;
       if ( $one_line =~ /\w/ )
       {
-      	chomp($one_line);
-		   $text = &_analyse_line($text,$one_line);
-	      $text->{num_text_lines}++;
+         chomp($one_line);
+         $text = &_analyse_line($text,$one_line);
+         $text->{num_text_lines}++;
       }
       else # empty or blank line
       {
-	      $text->{num_blank_lines}++;
+         $text->{num_blank_lines}++;
       }
-	}
+   }
    close(IN_FH);
    $text->_calculate_readability;
    
    return($text);
 }
 #------------------------------------------------------------------------------
+# Analyse a block of text, stored as a string. The string may contain line
+# terminators
+
 sub analyse_block
 {
    my $text = shift;
@@ -253,10 +268,10 @@ sub analyse_block
    
    unless ( $block )
    {
-	   return($text);
+      return($text);
    }
    
-   # by setting limit to -1, we prevent split from stripping 
+   # by setting split limit to -1, we prevent split from stripping 
    # trailing line terminators
    my @all_lines = split(/\n/,$block,-1);
    my $one_line;
@@ -264,14 +279,14 @@ sub analyse_block
    {
       if ( $one_line =~ /\w/ )
       {
-		   $text = &_analyse_line($text,$one_line);
-	      $text->{num_text_lines}++;
+         $text = &_analyse_line($text,$one_line);
+         $text->{num_text_lines}++;
       }
       else # empty or blank line
       {
-	      $text->{num_blank_lines}++;
+         $text->{num_blank_lines}++;
       }
-	}
+   }
    
    $text->_calculate_readability;
    return($text);
@@ -325,17 +340,19 @@ sub kincaid
    return($text->{kincaid});
 }
 #------------------------------------------------------------------------------
+# Return annonymous hash of all the unique words in analysed text. The words
+# occurnece count is stoed in the hash value
+
 sub unique_words
 {
    my $text = shift;
-   # return annonymous hash of unique words
    if ( $text->{unique_words} )
    {
-	   return( %{ $text->{unique_words} } );
+      return( %{ $text->{unique_words} } );
    }
    else
    {
-   	return(undef);
+      return(undef);
    }
 }
 #------------------------------------------------------------------------------
@@ -350,19 +367,21 @@ sub report
    
    if ( $text->{file_name} )
    {
-	$report .= sprintf("File name              : %s\n",$text->{file_name} );
+   $report .= sprintf("File name                  : %s\n",$text->{file_name} );
    }
       
-   $report .= sprintf("Number of characters   : %d\n",$text->num_chars);
-   $report .= sprintf("Number of words        : %d\n",$text->num_words);
-   $report .= sprintf("Number of sentences    : %d\n",$text->num_sentences);
-   $report .= sprintf("Number of text lines   : %d\n",$text->num_text_lines);
-   $report .= sprintf("Number of blank lines  : %d\n",$text->num_blank_lines);
+   $report .= sprintf("Number of characters       : %d\n",  $text->num_chars);
+   $report .= sprintf("Number of words            : %d\n",  $text->num_words);
+   $report .= sprintf("Average syllables per word : %.2f\n",$text->{syllables_per_word});
+   $report .= sprintf("Number of sentences        : %d\n",  $text->num_sentences);
+   $report .= sprintf("Average words per sentence : %.2f\n",$text->{words_per_sentence});
+   $report .= sprintf("Number of text lines       : %d\n",  $text->num_text_lines);
+   $report .= sprintf("Number of blank lines      : %d\n",  $text->num_blank_lines);
    
    $report .= "\n\nREADABILITY INDICES\n\n";
-   $report .= sprintf("Fog                    : %-5.2f\n",$text->fog);
-   $report .= sprintf("Flesch                 : %-5.2f\n",$text->flesch);
-   $report .= sprintf("Flesch-Kincaid         : %-5.2f\n",$text->kincaid);
+   $report .= sprintf("Fog                        : %.2f\n",$text->fog);
+   $report .= sprintf("Flesch                     : %.2f\n",$text->flesch);
+   $report .= sprintf("Flesch-Kincaid             : %.2f\n",$text->kincaid);
    
    return($report);
 }
@@ -384,31 +403,34 @@ sub _initialize
    $text->{unique_words} = ();
    $text->{file_name} = '';
    
-   
    return($text);
 }
 #------------------------------------------------------------------------------
 sub _analyse_line
 {
    my $text = shift;
-	my ($one_line) = @_;
+   my ($one_line) = @_;
 
     $text->{num_chars} += length($one_line);
       
-   # Word found, such as: twice, BOTH, I'll, non-plussed ..
+   # Word found, such as: twice, BOTH, a, I'd, non-plussed ..
    # Ignore words like K12, &, X.Y.Z ...
-   while ( $one_line =~ /\b([A-Za-z][-'A-Za-z]*)\b/g ) 
+   while ( $one_line =~ /\b([a-z][-'a-z]*)\b/ig ) 
    {
-   	my $one_word = $1;
+      my $one_word = $1;
       
-   	# Try to filter out acronyms and  abbreviations by accepting words with a
-      # vowel sound, won't work for GPO etc. 
+      # Try to filter out acronyms and  abbreviations by accepting 
+      # words with a vowel sound. This won't work for GPO etc. 
       next unless $one_word =~ /[aeiouy]/i;
       
-      # add test for validity of hypenated word
+      # Test for valid hyphenated word like be-bop
+      if ( $one_word =~ /-/ )
+      {
+         next unless $one_word =~ /[a-z]{2,}-[a-z]{2,}/i;
+      }
       
-		# word frequency count
-		$text->{unique_words}{lc($one_word)}++;
+      # word frequency count
+      $text->{unique_words}{lc($one_word)}++;
       
       $text->{num_words}++;
       
@@ -420,17 +442,25 @@ sub _analyse_line
       # Should add check for proper names in here as well
       if ( $num_syllables > 2 and $one_word !~ /-/ )
       {
-      	$text->{num_complex_words}++;
+         $text->{num_complex_words}++;
       }
-	}
+   }
+   # Remove '.'s to denote common abbreviations in name prefixes. We could include
+   # abbreviations like etc. St. Ltd. , but these may occur as the last word in
+   # a sentence, where the '.' also denotes mean the end of the sentence.
+   $one_line =~ s/Mr\./Mr/ig; 
+   $one_line =~ s/Mrs\./Mrs/ig; 
+   $one_line =~ s/Ms\./Ms/ig; 
+   $one_line =~ s/M\/s\./M\/s/ig; 
    
-   # Search for full stop to end a sentence. 
-   while ( $one_line =~ /\b\s*\.\s*\b/g ) { $text->{num_sentences}++ }
-   $one_line =~ /\b\s*\.\s*$/g and $text->{num_sentences}++;
+   # Search for '.', '?' or '!'  to end a sentence. 
+   while ( $one_line =~ /\b\s*[.!?]\s*\b/g ) { $text->{num_sentences}++ }
+   $one_line =~ /\b\s*[.!?]\s*$/g and $text->{num_sentences}++;
    
    return($text);
 }
 #------------------------------------------------------------------------------
+# Determine the three readability indices
 sub _calculate_readability
 {
    my $text = shift;
@@ -438,24 +468,26 @@ sub _calculate_readability
    if ( $text->{num_sentences} and  $text->{num_words} )
    {
    
-	   $text->{words_per_sentence} = $text->{num_words} / $text->{num_sentences};
-	   $text->{syllables_per_word} = $text->{num_syllables} / $text->{num_words};
-	   
-	   $text->{fog} = ( $text->{words_per_sentence} +  $text->{num_complex_words} ) * 0.4;
-	   
-		$text->{flesch} =  206.835 - (1.015 * $text->{words_per_sentence}) -
-	   	(84.6 * $text->{syllables_per_word});
-	      
-		$text->{kincaid} =  (11.8 * $text->{syllables_per_word}) + 
-	   	(0.39 * $text->{words_per_sentence}) - 15.59;
+      $text->{words_per_sentence} = $text->{num_words} / $text->{num_sentences};
+      $text->{syllables_per_word} = $text->{num_syllables} / $text->{num_words};
+      $text->{percent_complex_words} = 
+         ( $text->{num_complex_words} / $text->{num_words} ) * 100;
+         
+      $text->{fog} = ( $text->{words_per_sentence} +  $text->{percent_complex_words} ) * 0.4;
+      
+      $text->{flesch} =  206.835 - (1.015 * $text->{words_per_sentence}) -
+         (84.6 * $text->{syllables_per_word});
+         
+      $text->{kincaid} =  (11.8 * $text->{syllables_per_word}) + 
+         (0.39 * $text->{words_per_sentence}) - 15.59;
    }
    else
    {
-	   $text->{words_per_sentence} = 0;
-	   $text->{syllables_per_word} = 0;
-	   $text->{fog} = 0;
-		$text->{flesch} = 0;
-		$text->{kincaid} = 0;
+      $text->{words_per_sentence} = 0;
+      $text->{syllables_per_word} = 0;
+      $text->{fog} = 0;
+      $text->{flesch} = 0;
+      $text->{kincaid} = 0;
    }
 }
 #------------------------------------------------------------------------------

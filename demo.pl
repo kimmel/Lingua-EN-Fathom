@@ -3,21 +3,27 @@
 
 use Lingua::EN::Fathom;
 
+
 my $sample =  
-q{Returns the number of words in the analysed text file or block. A word must
-consist of letters a-z with at least one vowel sound, and optionally an
-apostrophe or hyphen. Items such as "&, K108, NSW" are not counted as words.
-};
+q{In general, construction of pictograms follows the general procedure used in 
+constructing bar charts. But two special rules should be followed! First, all 
+of the picture units used must be of equal size. The comparisons must be made 
+wholly on the basis of the number of illustrations used and never by varying 
+the areas of the individual pictures used. The reason for this rule is obvious. 
+The human eye is grossly inadequate in comparing areas of geometric designs. 
+Second, the pictures or symbols used must appropriately depict the quantity to 
+be illustrated. A comparison of the navies of the world, for example, might 
+make use of miniature ship drawings. Cotton production might be shown by bales 
+of cotton. Obviously, the drawings used must be immediately interpreted by the 
+reader.};
 
 my $text = new Lingua::EN::Fathom;
 $text->analyse_block($sample);
 
-$num_sentences = $text->num_sentences; 
-
 print($text->report,"\n");
 
 %uniq_words = $text->unique_words;
-foreach $word ( sort keys  uniq_words )
+foreach $word ( sort keys  %uniq_words )
 {
 	# print occurences of each unique word, followed by the word itself
 	print("$uniq_words{$word} :$word\n");

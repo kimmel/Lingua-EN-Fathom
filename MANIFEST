@@ -3,4 +3,5 @@ README
 Makefile.PL
 demo.pl
 Fathom.pm
+Changes
 t/main.t
