@@ -2,6 +2,7 @@ MANIFEST
 README
 Makefile.PL
 demo.pl
+demo_recurse.pl
 Fathom.pm
 Changes
 t/main.t

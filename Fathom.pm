@@ -13,12 +13,13 @@ Lingua::EN::Fathom - readability and general measurements of English text
    $accumulate = 1;
    $text->analyse_block($text_string,$accumulate);
 
-   $num_chars       = $text->num_chars;
-   $num_words       = $text->num_words;
-   $num_sentences   = $text->num_sentences;
-   $num_text_lines  = $text->num_text_lines;
-   $num_blank_lines = $text->num_blank_lines;
-   $num_paragraphs  = $text->num_paragraphs;
+   $num_chars             = $text->num_chars;
+   $num_words             = $text->num_words;
+   $percent_complex_words = $text->percent_complex_words;
+   $num_sentences         = $text->num_sentences;
+   $num_text_lines        = $text->num_text_lines;
+   $num_blank_lines       = $text->num_blank_lines;
+   $num_paragraphs        = $text->num_paragraphs;
 
 
    %words = $text->unique_words;
@@ -93,6 +94,11 @@ Returns the number of words in the analysed text file or block. A word must
 consist of letters a-z with at least one vowel sound, and optionally an
 apostrophe or hyphen. Items such as "&, K108, NSW" are not counted as words.
 
+=head2 percent_complex_words
+
+Returns the percentage of complex words in the analysed text file or block. A 
+complex word must consist of thrre or more sylables. This statistic is used to
+calculate the fog index.
 
 =head2 num_sentences
 
@@ -132,7 +138,7 @@ For more information see: http://www.plainlanguage.com/Resources/readability.htm
 
 Returns the Fog index for the analysed text file or block.
 
-	words_per_sentence +  percent_complex_words ) * 0.4
+  ( words_per_sentence +  percent_complex_words ) * 0.4
 
 The Fog index, developed by Robert Gunning, is a well known and simple
 formula for measuring readability. The index indicates the number of years
@@ -235,6 +241,7 @@ and/or modify it under the terms of the Perl Artistic License
 =head1 AUTHOR
 
 Lingua::EN::Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
+<http://members.ozemail.com.au/~kimaryan/data_distillers/>
 
 =cut
 
@@ -248,7 +255,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA $VERSION);
 
-$VERSION   = '1.05';
+$VERSION   = '1.06';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -342,6 +349,13 @@ sub num_words
    return($text->{num_words});
 }
 #------------------------------------------------------------------------------
+sub percent_complex_words
+{
+   my $text = shift;
+   return($text->{percent_complex_words});
+}
+
+#------------------------------------------------------------------------------
 sub num_sentences
 {
    my $text = shift;
@@ -426,6 +440,7 @@ sub report
 
    $report .= sprintf("Number of characters       : %d\n",  $text->num_chars);
    $report .= sprintf("Number of words            : %d\n",  $text->num_words);
+   $report .= sprintf("Percent of complex words   : %.2f\n",$text->percent_complex_words);
    $report .= sprintf("Average syllables per word : %.4f\n",$text->syllables_per_word);
    $report .= sprintf("Number of sentences        : %d\n",  $text->num_sentences);
    $report .= sprintf("Average words per sentence : %.4f\n",$text->words_per_sentence);
@@ -468,7 +483,7 @@ sub _initialize
    return($text);
 }
 #------------------------------------------------------------------------------
-# Increment text line, blank line and paragraph count
+# Increment number of text lines, blank lines and paragraphs
 
 sub _analyse_line
 {
@@ -527,11 +542,12 @@ sub _analyse_words
       $text->{num_words}++;
 
       # Use subroutine from Lingua::EN::Syllable
-      $text->{num_syllables} += &syllable($one_word);
+      my $num_syllables_current_word = &syllable($one_word);
+      $text->{num_syllables} += $num_syllables_current_word;
 
       # Required for Fog index, count non hyphenated words of 3 or more
       # syllables. Should add check for proper names in here as well
-      if ( $text->{num_syllables} > 2 and $one_word !~ /-/ )
+      if ( $num_syllables_current_word > 2 and $one_word !~ /-/ )
       {
          $text->{num_complex_words}++;
       }
