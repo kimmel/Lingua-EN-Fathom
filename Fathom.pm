@@ -1,6 +1,6 @@
 =head1 NAME
 
-Lingua::EN::Fathom -  readability and general measurements of English text
+Lingua::EN::Fathom - readability and general measurements of English text
 
 =head1 SYNOPSIS
 
@@ -45,11 +45,12 @@ then calculated for the number of characters, words, sentences, blank
 and non blank (text) lines and paragraphs.
 
 Three common readability statistics are also derived, the Fog, Flesch and
-Kincaid indices. 
+Kincaid indices.
 
 All of these properties can be accessed through individual methods, or by
 generating a text report.
 
+A hash of all unique words and the number of times they occur is generated.
    
 
 =head1 METHODS
@@ -105,7 +106,7 @@ or block.
 Returns the number of lines NOT containing any text in the analysed text file 
 or block.
 
-=head2 num_blank_lines
+=head2 num_paragraphs
 
 Returns the number of paragraphs in the analysed text file or block.
 
@@ -113,9 +114,9 @@ Returns the number of paragraphs in the analysed text file or block.
 
 =head2 READABILITY
 
-Three indices of text readability are calcuated. They all meausure complexity as
+Three indices of text readability are calculated. They all measure complexity as
 a function of syllables per word and words per sentence. They assume the text	is
-well formed and logical. You could analyse a passage of non-sensical English and
+well formed and logical. You could analyse a passage of nonsensical English and
 find the readability is quite good, provided the words are not too complex and 
 the sentences not too long.
 
@@ -156,12 +157,34 @@ that the document can be understood by an eighth grader. A score of 7.0 to
 8.0 is considered to be optimal.
 
 
-
 =head2 unique_words
 
 Returns a hash of unique words. The words (in lower case) are held in 
 the hash keys while the number of occurrences are held in the hash values.
 
+
+=head2 report
+
+print($text->report);
+   
+Produces a text based report containing the following statistics for
+the currently analysed text block or file:  
+
+   Number of characters
+	Number of words
+	Average syllables per word
+	Number of sentences
+	Average words per sentence
+	Number of text lines
+	Number of blank lines
+	Number of paragraphs
+
+	Fog Index
+	Flesch Index
+	Flesch-Kincaid Index
+
+The return value is a string containing the report contents   
+   
 
 =head1 SEE ALSO
 
@@ -181,7 +204,7 @@ the hash keys while the number of occurrences are held in the hash values.
 Common abbreviations such as St. or Pty. Ltd. will trick the module into
 inflating the number of sentences it finds.
 
-The syllable count provided in Lingua::EN;;syllable is about 90% accurate
+The syllable count provided in Lingua::EN::Syllable is about 90% accurate
 
 Acronyms that contain vowels, like GPO, will be counted as word.
 
@@ -215,9 +238,9 @@ use Lingua::EN::Syllable;
 use strict;
 
 use Exporter;
-use vars qw (@ISA @EXPORT_OK $VERSION);
+use vars qw (@ISA $VERSION);
 
-$VERSION   = '1.02';
+$VERSION   = '1.03';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -230,6 +253,8 @@ sub new
    return($text);
 }
 #------------------------------------------------------------------------------
+# Analyse text stored in a file, reading from file one line at a time
+ 
 sub analyse_file
 {
    my $text = shift;
@@ -307,7 +332,6 @@ sub analyse_block
 	         $text->{num_paragraphs}++;
             $in_paragraph = 1;
          }
-         
       }
       else # empty or blank line
       {
@@ -374,8 +398,8 @@ sub kincaid
    return($text->{kincaid});
 }
 #------------------------------------------------------------------------------
-# Return annonymous hash of all the unique words in analysed text. The words
-# occurnece count is stoed in the hash value
+# Return anonymous hash of all the unique words in analysed text. The words
+# occurrence count is stored in the hash value
 
 sub unique_words
 {
@@ -399,10 +423,8 @@ sub report
    
    my $report = '';
    
-   if ( $text->{file_name} )
-   {
+   $text->{file_name} and 
    $report .= sprintf("File name                  : %s\n",$text->{file_name} );
-   }
       
    $report .= sprintf("Number of characters       : %d\n",  $text->num_chars);
    $report .= sprintf("Number of words            : %d\n",  $text->num_words);
@@ -441,6 +463,9 @@ sub _initialize
    return($text);
 }
 #------------------------------------------------------------------------------
+# Try to detect real words in line. Increment syllable, word, complex word, 
+# and sentence counters.
+
 sub _analyse_line
 {
    my $text = shift;
@@ -473,7 +498,7 @@ sub _analyse_line
       my $num_syllables = &syllable($one_word);
       $text->{num_syllables} += $num_syllables;
       
-      # Required for Fog index, non hyphenated word of 3 or more syllables 
+      # Required for Fog index, count non hyphenated word of 3 or more syllables 
       # Should add check for proper names in here as well
       if ( $num_syllables > 2 and $one_word !~ /-/ )
       {
@@ -481,8 +506,8 @@ sub _analyse_line
       }
    }
    # Remove '.'s to denote common abbreviations in name prefixes. We could include
-   # abbreviations like etc. St. Ltd. , but these may occur as the last word in
-   # a sentence, where the '.' also denotes mean the end of the sentence.
+   # abbreviations like etc. St. or Ltd., but these may occur as the last word in
+   # a sentence, where the '.' also denotes the end of the sentence.
    $one_line =~ s/Mr\./Mr/ig; 
    $one_line =~ s/Mrs\./Mrs/ig; 
    $one_line =~ s/Ms\./Ms/ig; 
@@ -496,11 +521,12 @@ sub _analyse_line
 }
 #------------------------------------------------------------------------------
 # Determine the three readability indices
+
 sub _calculate_readability
 {
    my $text = shift;
    
-   if ( $text->{num_sentences} and  $text->{num_words} )
+   if ( $text->{num_sentences} and $text->{num_words} )
    {
    
       $text->{words_per_sentence} = $text->{num_words} / $text->{num_sentences};

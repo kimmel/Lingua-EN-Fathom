@@ -1,15 +1,16 @@
 
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.03 07 Jan 2001:
+   - Added documenation of 'report' method 
+
 
 1.02 15 Mar 2000: 
-
    - Added paragraph couunt
    - Fixed error in test 2 of test script (word count was 38, not 39)
 
 
 1.01 12 Mar 2000: 
-
    - Added stricter test for hyphenated words
    - Added more statistics to report
    - Accounted for name prefixes (Mr., Dr. etc ) in sentences
@@ -21,5 +22,4 @@ Revision history for Perl CPAN module Lingua::En::Fathom
    - Allowed for sentences  ending in '?' and '!' as well
      as '.' Thanks to Steve Grantz for spotting this limitation.
                   
-
 1.00 23 Jan 2000: First Release
