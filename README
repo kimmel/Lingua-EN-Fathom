@@ -1,55 +1,55 @@
-Lingua::EN::Fathom -  readability and general measurements of English text
+Lingua::EN::Fathom - readability and general measurements of English text
 
-=head1 SYNOPSIS
+SYNOPSIS
 
    use Lingua::EN::Fathom;
 
-   my $text = new Lingua::EN::Fathom; 
+   my $text = new Lingua::EN::Fathom;
 
    $text->analyse_file("sample.txt");
 
    $accumulate = 1;
    $text->analyse_block($text_string,$accumulate);
-   
+
    $num_chars       = $text->num_chars;
    $num_words       = $text->num_words;
    $num_sentences   = $text->num_sentences;
    $num_text_lines  = $text->num_text_lines;
    $num_blank_lines = $text->num_blank_lines;
    $num_paragraphs  = $text->num_paragraphs;
-   
+
    %words = $text->unique_words;
    foreach $word ( sort keys %words )
    {
       print("$words{$word} :$word\n");
    }
-   
+
    $fog     = $text->fog;
    $flesch  = $text->flesch;
    $kincaid = $text->kincaid;
-   
+
    print($text->report);
-   
 
-=head1 DESCRIPTION
 
-This module analyses English text in either a string or file. Totals are 
+DESCRIPTION
+
+This module analyses English text in either a string or file. Totals are
 then calculated for the number of characters, words, sentences, blank
 and non blank (text) lines and paragraphs.
 
 Three common readability statistics are also derived, the Fog, Flesch and
-Kincaid indices. 
+Kincaid indices.
 
 All of these properties can be accessed through individual methods, or by
 generating a text report.
 
-    
-=head1 REQUIRES
 
-Perl, version 5.001 or higher, Lingua::EN::Syllable 
+REQUIRES
+
+Perl, version 5.001 or higher, Lingua::EN::Syllable
 
 
-=head1 HOW TO INSTALL
+HOW TO INSTALL
 
     perl Makefile.PL
     make
@@ -57,19 +57,19 @@ Perl, version 5.001 or higher, Lingua::EN::Syllable
     make install
 
 
-=head1 BUGS
+BUGS
 
 
-                  
-=head1 COPYRIGHT
+
+COPYRIGHT
 
 Copyright (c) 2000 Kim Ryan. All rights reserved.
-This program is free software; you can redistribute it 
+This program is free software; you can redistribute it
 and/or modify it under the terms of the Perl Artistic License
 (see http://www.perl.com/perl/misc/Artistic.html).
 
 
-=head1 AUTHOR
+AUTHOR
 
 Lingua::EN::Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
 
