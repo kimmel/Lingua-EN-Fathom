@@ -20,6 +20,8 @@ Lingua::EN::Fathom - readability and general measurements of English text
    $num_text_lines        = $text->num_text_lines;
    $num_blank_lines       = $text->num_blank_lines;
    $num_paragraphs        = $text->num_paragraphs;
+   $syllables_per_word    = $text->syllables_per_word;
+   $words_per_sentence    = $text->words_per_sentence;
 
 
    %words = $text->unique_words;
@@ -69,7 +71,7 @@ needs to be created once, and can be reused with new input data.
 
 The C<analyse_file> method takes as input the name of a text file. Various
 text based statistics are calculated for the file. This method and
-C<analyse_block> are prerequisites for all the following methods.	An optional
+C<analyse_block> are prerequisites for all the following methods. An optional
 argument may be supplied to control accumulation of statistics. If set to
 a non zero value, all statistics are accumulated with each successive call.
 
@@ -97,7 +99,7 @@ apostrophe or hyphen. Items such as "&, K108, NSW" are not counted as words.
 =head2 percent_complex_words
 
 Returns the percentage of complex words in the analysed text file or block. A 
-complex word must consist of thrre or more sylables. This statistic is used to
+complex word must consist of three or more syllables. This statistic is used to
 calculate the fog index.
 
 =head2 num_sentences
@@ -109,24 +111,34 @@ may occur before and after the full stop.
 
 =head2 num_text_lines
 
-Returns the number of lines containing some text in the analysed text file
-or block.
+Returns the number of lines containing some text in the analysed
+text file or block.
 
 =head2 num_blank_lines
 
-Returns the number of lines NOT containing any text in the analysed text file
-or block.
+Returns the number of lines NOT containing any text in the analysed
+text file or block.
 
 =head2 num_paragraphs
 
 Returns the number of paragraphs in the analysed text file or block.
+
+=head2 syllables_per_word
+
+Returns the average number of syllables per word in the analysed 
+text file or block.
+
+=head2 words_per_sentence
+
+Returns the average number of words per sentence in the analysed 
+text file or block.
 
 
 
 =head2 READABILITY
 
 Three indices of text readability are calculated. They all measure complexity as
-a function of syllables per word and words per sentence. They assume the text	is
+a function of syllables per word and words per sentence. They assume the text is
 well formed and logical. You could analyse a passage of nonsensical English and
 find the readability is quite good, provided the words are not too complex and
 the sentences not too long.
@@ -156,7 +168,7 @@ text once and understand that piece of writing with its word sentence workload.
 
 Returns the Flesch reading ease score for the analysed text file or block.
 
-	206.835 - (1.015 * words_per_sentence) - (84.6 * syllables_per_word)
+   206.835 - (1.015 * words_per_sentence) - (84.6 * syllables_per_word)
 
 This score rates text on a 100 point scale. The higher the score, the easier
 it is to understand the text. A score of 60 to 70 is considered to be optimal.
@@ -167,7 +179,7 @@ it is to understand the text. A score of 60 to 70 is considered to be optimal.
 Returns the Flesch-Kincaid grade level score for the analysed text
 file or block.
 
-	(11.8 * syllables_per_word) +  (0.39 * words_per_sentence) - 15.59;
+   (11.8 * syllables_per_word) +  (0.39 * words_per_sentence) - 15.59;
 
 This score rates text on  U.S. grade school level. So a score of 8.0 means
 that the document can be understood by an eighth grader. A score of 7.0 to
@@ -188,17 +200,17 @@ Produces a text based report containing the following statistics for
 the currently analysed text block or file:
 
    Number of characters
-	Number of words
-	Average syllables per word
-	Number of sentences
-	Average words per sentence
-	Number of text lines
-	Number of blank lines
-	Number of paragraphs
+   Number of words
+   Average syllables per word
+   Number of sentences
+   Average words per sentence
+   Number of text lines
+   Number of blank lines
+   Number of paragraphs
 
-	Fog Index
-	Flesch Index
-	Flesch-Kincaid Index
+   Fog Index
+   Flesch Index
+   Flesch-Kincaid Index
 
 The return value is a string containing the report contents
 
@@ -232,7 +244,7 @@ The fog index should exclude proper names
 =head1 COPYRIGHT
 
 
-Copyright (c) 2000-1 Kim Ryan. All rights reserved.
+Copyright (c) 2000-2002 Kim Ryan. All rights reserved.
 This program is free software; you can redistribute it
 and/or modify it under the terms of the Perl Artistic License
 (see http://www.perl.com/perl/misc/Artistic.html).
@@ -240,8 +252,8 @@ and/or modify it under the terms of the Perl Artistic License
 
 =head1 AUTHOR
 
-Lingua::EN::Fathom was written by Kim Ryan <kimaryan@ozemail.com.au> in 2000.
-<http://members.ozemail.com.au/~kimaryan/data_distillers/>
+Lingua::EN::Fathom was written by Kim Ryan <kimryan@cpan.org> in 2000.
+<http://www.data-distillers.com>
 
 =cut
 
@@ -255,7 +267,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA $VERSION);
 
-$VERSION   = '1.06';
+$VERSION   = '1.07';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -279,7 +291,7 @@ sub analyse_file
 
    unless ( $accumulate )
    {
-	   $text = &_initialize($text);
+      $text = &_initialize($text);
    }
 
    $text->{file_name} = $file_name;
@@ -296,7 +308,7 @@ sub analyse_file
    while ( <IN_FH> )
    {
       my $one_line = $_;
-   	($in_paragraph,$text) = &_analyse_line($text,$one_line,$in_paragraph);
+      ($in_paragraph,$text) = &_analyse_line($text,$one_line,$in_paragraph);
    }
    close(IN_FH);
    $text->_calculate_readability;
@@ -314,7 +326,7 @@ sub analyse_block
 
    unless ( $accumulate )
    {
-   	$text = &_initialize($text);
+      $text = &_initialize($text);
    }
 
    unless ( $block )
@@ -330,7 +342,7 @@ sub analyse_block
    my $one_line;
    foreach $one_line ( @all_lines )
    {
-   	($in_paragraph,$text) = &_analyse_line($text,$one_line,$in_paragraph);
+      ($in_paragraph,$text) = &_analyse_line($text,$one_line,$in_paragraph);
    }
 
    $text->_calculate_readability;
@@ -490,23 +502,23 @@ sub _analyse_line
    my $text = shift;
    my ($one_line,$in_paragraph) = @_;
 
-	if ( $one_line =~ /\w/ )
-	{
-	   chomp($one_line);
-	   $text = &_analyse_words($text,$one_line);
-	   $text->{num_text_lines}++;
-	
-	   unless ( $in_paragraph )
-	   {
-	      $text->{num_paragraphs}++;
-	      $in_paragraph = 1;
-	   }
-	}
-	else # empty or blank line
-	{
-	   $text->{num_blank_lines}++;
-	   $in_paragraph = 0;
-	}
+   if ( $one_line =~ /\w/ )
+   {
+      chomp($one_line);
+      $text = &_analyse_words($text,$one_line);
+      $text->{num_text_lines}++;
+   
+      unless ( $in_paragraph )
+      {
+         $text->{num_paragraphs}++;
+         $in_paragraph = 1;
+      }
+   }
+   else # empty or blank line
+   {
+      $text->{num_blank_lines}++;
+      $in_paragraph = 0;
+   }
    return($in_paragraph,$text);
 }
 #------------------------------------------------------------------------------
@@ -567,6 +579,7 @@ sub _analyse_words
    
    # Commercial abbreviations
    $one_line =~ s/Pty\. /Pty /ig;
+   $one_line =~ s/PLC\. /PLC /ig;
    $one_line =~ s/Ltd\. /Ltd /ig;
    $one_line =~ s/Inc\. /Inc /ig;
 

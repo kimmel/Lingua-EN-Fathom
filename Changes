@@ -1,9 +1,13 @@
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.07 02 Apr 2002
+    Improved documentation
+    Added more abbreviations to _analyse_words
+
 1.06 04 Jan 2002
     Fixed error in calculation of Fog index, thanks to Trevor Jenkins
-	Added method to get num_complex_words
-	Added demo_recurse.pl
+    Added method to get num_complex_words
+    Added demo_recurse.pl
 
 
 1.05 19 May 2001

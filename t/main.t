@@ -1,8 +1,8 @@
 #------------------------------------------------------------------------------
 # Test script for Lingua::EN::::Fathom.pm 
 #                                            
-# Author: Kim Ryan (kimaryan@ozemail.com.au) 
-# Date  : 20 January 2000                         
+# Author      : Kim Ryan (kimryan@cpan.org)
+# Last update : 23 Mar 2002
 #------------------------------------------------------------------------------
 
 use strict;
