@@ -19,7 +19,7 @@ WriteMakefile
    ( $] >= 5.005 ?
       (
           ABSTRACT => 'text readability and general measurements',
-          AUTHOR   => 'Kim Ryan <kimryan@cpan.org>',
+          AUTHOR   => 'Kim Ryan',
       ) : () 
    ),
    

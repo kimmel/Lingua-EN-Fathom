@@ -1,5 +1,8 @@
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.08 13 Feb 2004
+    Improved documentation
+
 1.07 02 Apr 2002
     Improved documentation
     Added more abbreviations to _analyse_words

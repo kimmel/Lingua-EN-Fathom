@@ -244,7 +244,7 @@ The fog index should exclude proper names
 =head1 COPYRIGHT
 
 
-Copyright (c) 2000-2002 Kim Ryan. All rights reserved.
+Copyright (c) 2000-2004 Kim Ryan. All rights reserved.
 This program is free software; you can redistribute it
 and/or modify it under the terms of the Perl Artistic License
 (see http://www.perl.com/perl/misc/Artistic.html).
@@ -252,8 +252,7 @@ and/or modify it under the terms of the Perl Artistic License
 
 =head1 AUTHOR
 
-Lingua::EN::Fathom was written by Kim Ryan <kimryan@cpan.org> in 2000.
-<http://www.data-distillers.com>
+Lingua::EN::Fathom was written by Kim Ryan <kimryan at cpan dot org>.
 
 =cut
 
@@ -267,7 +266,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA $VERSION);
 
-$VERSION   = '1.07';
+$VERSION   = '1.08';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
