@@ -1,25 +1,31 @@
 
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.04 23 Feb 2001
+    initialize now resets readablity indices and num_paragraphs
+    Sentence count is no longer tricked by quotes before a full stop
+    Optional argument on analyse block and file to allow stats to accumulate
+
+
 1.03 07 Jan 2001:
-   - Added documenation of 'report' method 
+    Added documenation of 'report' method 
 
 
 1.02 15 Mar 2000: 
-   - Added paragraph couunt
-   - Fixed error in test 2 of test script (word count was 38, not 39)
+    Added paragraph count
+    Fixed error in test 2 of test script (word count was 38, not 39)
 
 
 1.01 12 Mar 2000: 
-   - Added stricter test for hyphenated words
-   - Added more statistics to report
-   - Accounted for name prefixes (Mr., Dr. etc ) in sentences
-   - Improved documentation
+    Added stricter test for hyphenated words
+    Added more statistics to report
+    Accounted for name prefixes (Mr., Dr. etc ) in sentences
+    Improved documentation
 
-   - Changed Fog index calculation to use percentage of complex words
-     instead of total number of complex words. Thanks to Steve Grantz
+    Changed Fog index calculation to use percentage of complex words
+    instead of total number of complex words. Thanks to Steve Grantz
   
-   - Allowed for sentences  ending in '?' and '!' as well
-     as '.' Thanks to Steve Grantz for spotting this limitation.
+    Allowed for sentences  ending in '?' and '!' as well
+    as '.' Thanks to Steve Grantz for spotting this limitation.
                   
 1.00 23 Jan 2000: First Release

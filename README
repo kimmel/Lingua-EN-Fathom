@@ -7,8 +7,9 @@ Lingua::EN::Fathom -  readability and general measurements of English text
    my $text = new Lingua::EN::Fathom; 
 
    $text->analyse_file("sample.txt");
-   
-   $text->analyse_block($text_string);
+
+   $accumulate = 1;
+   $text->analyse_block($text_string,$accumulate);
    
    $num_chars       = $text->num_chars;
    $num_words       = $text->num_words;

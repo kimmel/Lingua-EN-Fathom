@@ -10,7 +10,8 @@ Lingua::EN::Fathom - readability and general measurements of English text
 
    $text->analyse_file("sample.txt");
    
-   $text->analyse_block($text_string);
+   $accumulate = 1;
+   $text->analyse_block($text_string,$accumulate);
    
    $num_chars       = $text->num_chars;
    $num_words       = $text->num_words;
@@ -67,14 +68,18 @@ needs to be created once, and can be reused with new input data.
 
 The C<analyse_file> method takes as input the name of a text file. Various
 text based statistics are calculated for the file. This method and 
-C<analyse_block> are prerequisites for all the following methods.
+C<analyse_block> are prerequisites for all the following methods.	An optional
+argument may be supplied to control accumualtion of statisitics. If set to
+a non zero value, all statistics are accumulated with each successive call.
 
 
 =head2 analyse_block
 
 The C<analyse_block> method takes as input the name of a text file. Various
 text based statistics are calculated for the file. This method and 
-C<analyse_file> are prerequisites for all the following methods.
+C<analyse_file> are prerequisites for all the following methods. An optional
+argument may be supplied to control accumualtion of statisitics. If set to
+a non zero value, all statistics are accumulated with each successive call.
 
 
 =head2 num_chars
@@ -126,6 +131,7 @@ For more information see: http://www.plainlanguage.com/Resources/readability.htm
 =head2 fog
 
 Returns the Fog index for the analysed text file or block.
+	words_per_sentence +  percent_complex_words ) * 0.4
 
 The Fog index, developed by Robert Gunning, is a well known and simple
 formula for measuring readability. The index indicates the number of years
@@ -142,6 +148,7 @@ text once and understand that piece of writing with its word sentence workload.
 =head2 flesch
 
 Returns the Flesch reading ease score for the analysed text file or block.
+	206.835 - (1.015 * words_per_sentence) - (84.6 * syllables_per_word)
 
 This score rates text on a 100 point scale. The higher the score, the easier 
 it is to understand the text. A score of 60 to 70 is considered to be optimal.
@@ -151,6 +158,8 @@ it is to understand the text. A score of 60 to 70 is considered to be optimal.
 
 Returns the Flesch-Kincaid grade level score for the analysed text 
 file or block.
+
+	(11.8 * syllables_per_word) +  (0.39 * words_per_sentence) - 15.59;
 
 This score rates text on  U.S. grade school level. So a score of 8.0 means
 that the document can be understood by an eighth grader. A score of 7.0 to 
@@ -206,7 +215,7 @@ inflating the number of sentences it finds.
 
 The syllable count provided in Lingua::EN::Syllable is about 90% accurate
 
-Acronyms that contain vowels, like GPO, will be counted as word.
+Acronyms that contain vowels, like GPO, will be counted as words.
 
 The fog index should exclude proper names
 
@@ -218,7 +227,7 @@ The fog index should exclude proper names
 =head1 COPYRIGHT
 
 
-Copyright (c) 2000 Kim Ryan. All rights reserved.
+Copyright (c) 2000-1 Kim Ryan. All rights reserved.
 This program is free software; you can redistribute it 
 and/or modify it under the terms of the Perl Artistic License
 (see http://www.perl.com/perl/misc/Artistic.html).
@@ -240,7 +249,7 @@ use strict;
 use Exporter;
 use vars qw (@ISA $VERSION);
 
-$VERSION   = '1.03';
+$VERSION   = '1.04';
 @ISA       = qw(Exporter);
 
 #------------------------------------------------------------------------------
@@ -253,14 +262,18 @@ sub new
    return($text);
 }
 #------------------------------------------------------------------------------
-# Analyse text stored in a file, reading from file one line at a time
+# Analyse text stored in a file, reading from the file one line at a time
  
 sub analyse_file
 {
    my $text = shift;
-   my ($file_name) = @_;
+   my ($file_name,$accumulate) = @_;
+
+   unless ( $accumulate )
+   {
+	   $text = &_initialize($text);
+   }
    
-   $text = &_initialize($text);
    $text->{file_name} = $file_name;
    
    # Only analyse non-empty text files
@@ -305,9 +318,12 @@ sub analyse_file
 sub analyse_block
 {
    my $text = shift;
-   my ($block) = @_;
+   my ($block,$accumulate) = @_;
    
-   $text = &_initialize($text);
+   unless ( $accumulate )
+   {
+   	$text = &_initialize($text);
+   }
    
    unless ( $block )
    {
@@ -456,9 +472,16 @@ sub _initialize
    $text->{num_complex_words} = 0;
    $text->{num_text_lines} = 0;
    $text->{num_blank_lines} = 0;
+   $text->{num_paragraphs} = 0;
    $text->{num_sentences} = 0;
    $text->{unique_words} = ();
    $text->{file_name} = '';
+
+
+   $text->{fog} = 0;
+   $text->{flesch} = 0;
+   $text->{kincaid} = 0;
+   
    
    return($text);
 }
@@ -512,9 +535,16 @@ sub _analyse_line
    $one_line =~ s/Mrs\./Mrs/ig; 
    $one_line =~ s/Ms\./Ms/ig; 
    $one_line =~ s/M\/s\./M\/s/ig; 
+   $one_line =~ s/Dr\./Dr/ig; 
+   
+   # Remove quotation marks as a quote followed by a full stop will not be
+   # correctly detected by the following regexps.
+   $one_line =~ s/"//g; 
+   $one_line =~ s/'//g; 
    
    # Search for '.', '?' or '!'  to end a sentence. 
    while ( $one_line =~ /\b\s*[.!?]\s*\b/g ) { $text->{num_sentences}++ }
+   # Check for final snetence, with no following words.
    $one_line =~ /\b\s*[.!?]\s*$/g and $text->{num_sentences}++;
    
    return($text);

@@ -4,7 +4,7 @@
 use Lingua::EN::Fathom;
 
 
-my $sample =  
+my $sample1 =  
 q{
 
 In general, construction of pictograms follows the general procedure used in 
@@ -24,8 +24,16 @@ End.
 
 };
 
+my $sample2 =  
+q{
+The second paragraph to analyse. 
+};
+
+
 my $text = new Lingua::EN::Fathom;
-$text->analyse_block($sample);
+$text->analyse_block($sample1,1);
+$text->analyse_block($sample2,1);
+
 
 print($text->report,"\n");
 
