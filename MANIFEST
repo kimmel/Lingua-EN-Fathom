@@ -1,0 +1,6 @@
+MANIFEST
+README
+Makefile.PL
+demo.pl
+Fathom.pm
+t/main.t
