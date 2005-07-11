@@ -1,40 +1,40 @@
 =head1 NAME
 
-Lingua::EN::Fathom - readability and general measurements of English text
+Lingua::EN::Fathom - Measure readability of English text
 
 =head1 SYNOPSIS
 
-   use Lingua::EN::Fathom;
+    use Lingua::EN::Fathom;
 
-   my $text = new Lingua::EN::Fathom;
+    my $text = new Lingua::EN::Fathom;
 
-   $text->analyse_file("sample.txt");
+    $text->analyse_file("sample.txt");
 
-   $accumulate = 1;
-   $text->analyse_block($text_string,$accumulate);
+    $accumulate = 1;
+    $text->analyse_block($text_string,$accumulate);
 
-   $num_chars             = $text->num_chars;
-   $num_words             = $text->num_words;
-   $percent_complex_words = $text->percent_complex_words;
-   $num_sentences         = $text->num_sentences;
-   $num_text_lines        = $text->num_text_lines;
-   $num_blank_lines       = $text->num_blank_lines;
-   $num_paragraphs        = $text->num_paragraphs;
-   $syllables_per_word    = $text->syllables_per_word;
-   $words_per_sentence    = $text->words_per_sentence;
+    $num_chars             = $text->num_chars;
+    $num_words             = $text->num_words;
+    $percent_complex_words = $text->percent_complex_words;
+    $num_sentences         = $text->num_sentences;
+    $num_text_lines        = $text->num_text_lines;
+    $num_blank_lines       = $text->num_blank_lines;
+    $num_paragraphs        = $text->num_paragraphs;
+    $syllables_per_word    = $text->syllables_per_word;
+    $words_per_sentence    = $text->words_per_sentence;
 
 
-   %words = $text->unique_words;
-   foreach $word ( sort keys %words )
-   {
+    %words = $text->unique_words;
+    foreach $word ( sort keys %words )
+    {
       print("$words{$word} :$word\n");
-   }
+    }
 
-   $fog     = $text->fog;
-   $flesch  = $text->flesch;
-   $kincaid = $text->kincaid;
+    $fog     = $text->fog;
+    $flesch  = $text->flesch;
+    $kincaid = $text->kincaid;
 
-   print($text->report);
+    print($text->report);
 
 
 =head1 REQUIRES
@@ -75,6 +75,8 @@ C<analyse_block> are prerequisites for all the following methods. An optional
 argument may be supplied to control accumulation of statistics. If set to
 a non zero value, all statistics are accumulated with each successive call.
 
+    $text->analyse_file("sample.txt");
+
 
 =head2 analyse_block
 
@@ -84,6 +86,7 @@ C<analyse_file> are prerequisites for all the following methods. An optional
 argument may be supplied to control accumulation of statistics. If set to
 a non zero value, all statistics are accumulated with each successive call.
 
+    $text->analyse_block("sample.txt");
 
 =head2 num_chars
 
@@ -94,7 +97,7 @@ includes characters such as spaces, and punctuation marks.
 
 Returns the number of words in the analysed text file or block. A word must
 consist of letters a-z with at least one vowel sound, and optionally an
-apostrophe or hyphen. Items such as "&, K108, NSW" are not counted as words.
+apostrophe or hyphen. Items such as "&, K108, NW" are not counted as words.
 
 =head2 percent_complex_words
 
@@ -143,7 +146,7 @@ well formed and logical. You could analyse a passage of nonsensical English and
 find the readability is quite good, provided the words are not too complex and
 the sentences not too long.
 
-For more information see: http://www.plainlanguage.com/Resources/readability.html
+For more information see: L<http://www.plainlanguage.com/Resources/readability.html>
 
 
 =head2 fog
@@ -194,7 +197,7 @@ the hash keys while the number of occurrences are held in the hash values.
 
 =head2 report
 
-print($text->report);
+    print($text->report);
 
 Produces a text based report containing the following statistics for
 the currently analysed text block or file:
@@ -217,9 +220,7 @@ The return value is a string containing the report contents
 
 =head1 SEE ALSO
 
-   Lingua::EN::Syllable
-   Lingua::EN::Sentence
-   B::Fathom
+L<Lingua::EN::Syllable>,L<Lingua::EN::Sentence>,L<B::Fathom>
 
 
 =head1 POSSIBLE EXTENSIONS
@@ -239,20 +240,19 @@ The fog index should exclude proper names
 
 =head1 BUGS
 
-
-
-=head1 COPYRIGHT
-
-
-Copyright (c) 2000-2004 Kim Ryan. All rights reserved.
-This program is free software; you can redistribute it
-and/or modify it under the terms of the Perl Artistic License
-(see http://www.perl.com/perl/misc/Artistic.html).
-
+None known
 
 =head1 AUTHOR
 
 Lingua::EN::Fathom was written by Kim Ryan <kimryan at cpan dot org>.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2005 Kim Ryan. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.4 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut
 
@@ -263,11 +263,7 @@ package Lingua::EN::Fathom;
 use Lingua::EN::Syllable;
 use strict;
 
-use Exporter;
-use vars qw (@ISA $VERSION);
-
-$VERSION   = '1.08';
-@ISA       = qw(Exporter);
+our $VERSION = '1.09';
 
 #------------------------------------------------------------------------------
 # Create a new instance of a text object.

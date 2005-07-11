@@ -4,32 +4,9 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile
 (
-   'VERSION_FROM'    => 'Fathom.pm',
-   'clean'           =>
-   {
-      'FILES'        => 'blib/* Makefile MANIFEST Lingua-EN-Fathom-*'
-   },
-   'dist'            =>
-   {
-      'COMPRESS'     => 'gzip',
-      'SUFFIX'       => 'gz'
-   },
-   'DISTNAME'        => 'Lingua-EN-Fathom',
-   
-   ( $] >= 5.005 ?
-      (
-          ABSTRACT => 'text readability and general measurements',
-          AUTHOR   => 'Kim Ryan',
-      ) : () 
-   ),
-   
-   'NAME'            => 'Lingua::EN::Fathom',
-   'PM'              =>
-   {
-      'Fathom.pm' => '$(INST_LIBDIR)/Fathom.pm',
-   },
-   'PREREQ_PM'       =>         
-   {                            
-      'Lingua::EN::Syllable' => 0, 
-   }                            
+   'NAME'         => 'Lingua::EN::Fathom',
+   'VERSION_FROM' => 'lib/Lingua/EN/Fathom.pm',
+   'ABSTRACT'     => 'Measure readability of English text',
+   'AUTHOR'       => 'Kim Ryan <kimryan at cpan org>',
+   'PREREQ_PM'    =>  { 'Lingua::EN::Syllable' => 0 }                            
 );

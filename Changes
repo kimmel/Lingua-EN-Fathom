@@ -1,5 +1,9 @@
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.09 11 Jul 2005
+    Improved documentation
+    Updated distribution to current CPAN requirements 
+
 1.08 13 Feb 2004
     Improved documentation
 

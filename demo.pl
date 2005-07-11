@@ -40,7 +40,7 @@ print($text->report,"\n");
 foreach $word ( sort keys  %uniq_words )
 {
 	# print occurences of each unique word, followed by the word itself
-	# print("$uniq_words{$word}\t:$word\n");
+	print("$uniq_words{$word}\t:$word\n");
 }
 
 
