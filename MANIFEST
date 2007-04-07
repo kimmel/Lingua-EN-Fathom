@@ -1,8 +1,8 @@
 MANIFEST
 README
 Makefile.PL
-demo.pl
-demo_recurse.pl
+examples/demo.pl
+examples/demo_recurse.pl
 lib/Lingua/EN/Fathom.pm
 Changes
 t/main.t

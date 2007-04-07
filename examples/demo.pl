@@ -1,6 +1,8 @@
 #! /usr/local/bin/perl
 # Demo script for Lingua::EN::Fathom.pm
 
+use lib "../lib";
+
 use Lingua::EN::Fathom;
 
 my $sample1 =

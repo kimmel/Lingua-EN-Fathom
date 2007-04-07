@@ -153,7 +153,7 @@ For more information see: L<http://www.plainlanguage.com/Resources/readability.h
 
 Returns the Fog index for the analysed text file or block.
 
-  ( words_per_sentence +  percent_complex_words ) * 0.4
+  ( words_per_sentence + percent_complex_words ) * 0.4
 
 The Fog index, developed by Robert Gunning, is a well known and simple
 formula for measuring readability. The index indicates the number of years
@@ -184,7 +184,7 @@ file or block.
 
    (11.8 * syllables_per_word) +  (0.39 * words_per_sentence) - 15.59;
 
-This score rates text on  U.S. grade school level. So a score of 8.0 means
+This score rates text on U.S. grade school level. So a score of 8.0 means
 that the document can be understood by an eighth grader. A score of 7.0 to
 8.0 is considered to be optimal.
 
@@ -199,21 +199,25 @@ the hash keys while the number of occurrences are held in the hash values.
 
     print($text->report);
 
-Produces a text based report containing the following statistics for
-the currently analysed text block or file:
+Produces a text based report containing all Fathom statistics for
+the currently analysed text block or file. For example: 
+    
+Number of characters       : 813
+Number of words            : 135
+Percent of complex words   : 20.00
+Average syllables per word : 1.7704
+Number of sentences        : 12
+Average words per sentence : 11.2500
+Number of text lines       : 13
+Number of blank lines      : 8
+Number of paragraphs       : 4
 
-   Number of characters
-   Number of words
-   Average syllables per word
-   Number of sentences
-   Average words per sentence
-   Number of text lines
-   Number of blank lines
-   Number of paragraphs
 
-   Fog Index
-   Flesch Index
-   Flesch-Kincaid Index
+READABILITY INDICES
+
+Fog                        : 12.5000
+Flesch                     : 45.6429
+Flesch-Kincaid             : 9.6879
 
 The return value is a string containing the report contents
 
@@ -248,7 +252,7 @@ Lingua::EN::Fathom was written by Kim Ryan <kimryan at cpan dot org>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2005 Kim Ryan. All rights reserved.
+Copyright (c) 2007 Kim Ryan. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,
@@ -263,7 +267,7 @@ package Lingua::EN::Fathom;
 use Lingua::EN::Syllable;
 use strict;
 
-our $VERSION = '1.09';
+our $VERSION = '1.10';
 
 #------------------------------------------------------------------------------
 # Create a new instance of a text object.

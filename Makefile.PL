@@ -8,5 +8,6 @@ WriteMakefile
    'VERSION_FROM' => 'lib/Lingua/EN/Fathom.pm',
    'ABSTRACT'     => 'Measure readability of English text',
    'AUTHOR'       => 'Kim Ryan <kimryan at cpan org>',
-   'PREREQ_PM'    =>  { 'Lingua::EN::Syllable' => 0 }                            
+   'LICENSE'      => 'perl',                                
+   'PREREQ_PM'    =>  { 'Lingua::EN::Syllable' => 0 }
 );
