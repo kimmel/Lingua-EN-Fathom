@@ -267,7 +267,7 @@ package Lingua::EN::Fathom;
 use Lingua::EN::Syllable;
 use strict;
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 #------------------------------------------------------------------------------
 # Create a new instance of a text object.
