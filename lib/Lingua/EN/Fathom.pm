@@ -266,8 +266,9 @@ package Lingua::EN::Fathom;
 
 use Lingua::EN::Syllable;
 use strict;
+use warnings;
 
-our $VERSION = '1.11';
+our $VERSION = '1.12';
 
 #------------------------------------------------------------------------------
 # Create a new instance of a text object.
@@ -563,7 +564,7 @@ sub _analyse_words
          $text->{num_complex_words}++;
       }
    }
-   # Remove '.'s to denote common abbreviations . By requiring a following space
+   # Remove full stops to denote common abbreviations . By requiring a following space
    # we know the '.' is not also ending the sentence.
    
    # People's titles

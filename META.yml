@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Lingua-EN-Fathom
-version:             1.11
+version:             1.12
 abstract:            Measure readability of English text
 license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.32

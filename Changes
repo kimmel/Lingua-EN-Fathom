@@ -1,5 +1,8 @@
 Revision history for Perl CPAN module Lingua::En::Fathom
 
+1.12 13 Apr 2008
+    Minir fixes
+    
 1.11 08 Apr 2007
     Fixed bug in generation of META.yml
 
