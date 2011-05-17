@@ -1,8 +1,19 @@
-#!perl
+#!./perl
 
 use warnings;
 use strict;
+use diagnostics;
 use Test::More;
-eval "use Test::Pod 1.14";
-plan skip_all => "Test::Pod 1.14 required for testing POD" if $@;
-all_pod_files_ok();
+use Module::Load::Conditional qw( can_load check_install );
+
+my $m = 'Test::Pod';
+my $v = '1.14';
+
+if ( check_install( module => $m, version => $v ) ) {
+  if ( can_load( modules => { $m => $v, }, verbose => 1 ) ) {
+    Test::Pod::all_pod_files_ok();
+  }
+}
+else {
+  plan skip_all => "$m $v required for testing POD";
+}
